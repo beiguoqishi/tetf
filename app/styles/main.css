@@ -314,7 +314,7 @@ body, .wrapper, #index {
 
 #player .btm-op {
     position: absolute;
-    bottom: 50px;
+    bottom: 20px;
     width: 100%;
     text-align: center;
 }
