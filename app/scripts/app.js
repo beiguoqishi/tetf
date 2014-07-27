@@ -304,9 +304,6 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                         .find('#question-area,.btm-op').hide();
                 }
             }
-            $('#player')
-                .append(failureTpl)
-                .find('#question-area,.btm-op').hide();
         }).on('touchend','#player .btm-op .help',function(e) {
             $('.mask').empty().html(helpPanelTpl).show();
         }).on('touchend','#player .btm-op .restart',function(e) {

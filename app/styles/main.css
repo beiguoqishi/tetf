@@ -445,8 +445,8 @@ body, .wrapper, #index {
 .failure-info .game-over {
     background: url("../images/gameover.png") top center no-repeat;
     background-size: contain;
-    height: 40px;
-    margin-top: 80px;
+    height: 50px;
+    margin-top: 70px;
 }
 
 .failure-info .cur-round-score {
@@ -471,13 +471,14 @@ body, .wrapper, #index {
 }
 
 .failure-info .goon-game {
-    height: 36px;
-    line-height: 34px;
+    height: 50px;
+    line-height: 50px;
     margin: 50px auto 0;
-    width: 86px;
+    width: 131px;
     background: url("../images/btnbg1.png") top center no-repeat;
     background-size: cover;
     padding-left: 34px;
+    text-shadow: 1px 1px #999;
 }
 
 .failure-info .op-list {
@@ -486,16 +487,18 @@ body, .wrapper, #index {
 
 .failure-info .op-list span {
     display: inline-block;
-    width: 60px;
-    height: 36px;
+    width: 80px;
+    height: 50px;
     background-size: cover;
     background-repeat: no-repeat;
 }
 
 .failure-info .op-list span.go-home {
     background-image: url("../images/backmenu.png");
+    border-right: 2px solid #32797F;
 }
 
 .failure-info .op-list span.share {
     background-image: url("../images/share.png");
+    border-right: 3px solid #32797F;
 }
