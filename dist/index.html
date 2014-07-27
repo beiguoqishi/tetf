@@ -1,0 +1,93 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>3824</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="stylesheet" href="styles/b5deabc5.main.css">
+    <script src="scripts/vendor/a52a8685.modernizr.js"></script>
+</head>
+<body>
+<!--[if lt IE 10]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+<div class="template" style="display: none">
+    <div id="index_tpl"><div id="index" class="my-page">
+        <ul class="op-list">
+            <li>
+                <span class="begin">开始游戏</span>
+            </li>
+            <li>
+                <span class="my-score">我的成绩</span>
+            </li>
+        </ul>
+    </div></div>
+    <div id="player_tpl">
+        <div id="player" class="my-page">
+            <header class="p-hd">
+                <nav class="nav">
+                    <span class="to-index">&lt;&nbsp;主菜单</span>
+                    <span class="barrier-progress">第<em class="barrier-num">1</em>题</span>
+                </nav>
+                <div class="time-tip">
+                    <div class="elapsed-time"></div>
+                    <i class="tick"></i>
+                </div>
+                <span class="remainder-time">01:00</span>
+            </header>
+            <div id="question-area"></div>
+        </div>
+    </div>
+    <div id="question_tpl">
+            <div class="stripe">
+                <i class="slash-ltor"></i>
+                <i class="slash-rtol"></i>
+            </div>
+            <div class="balls">
+                <i class="placeholder left-top"></i>
+                <i class="placeholder right-top"></i>
+                <i class="placeholder left-bottom"></i>
+                <i class="placeholder right-bottom"></i>
+                <div class="ball left-top" data-idx="1">
+                    <i class="num"></i>
+                </div>
+                <div class="ball right-top" data-idx="2">
+                    <i class="num"></i>
+                </div>
+                <div class="ball left-bottom" data-idx="3">
+                    <i class="num"></i></div>
+                <div class="ball right-bottom" data-idx="4">
+                    <i class="num"></i></div>
+            </div>
+    </div>
+</div>
+<div class="wrapper" id="container">
+
+</div>
+<div class="mask"></div>
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function (b, o, i, l, e, r) {
+        b.GoogleAnalyticsObject = l;
+        b[l] || (b[l] =
+                function () {
+                    (b[l].q = b[l].q || []).push(arguments)
+                });
+        b[l].l = +new Date;
+        e = o.createElement(i);
+        r = o.getElementsByTagName(i)[0];
+        e.src = '//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e, r)
+    }(window, document, 'script', 'ga'));
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
+</script>
+
+<script data-main="scripts/618315ba.main" src="bower_components/requirejs/require.js"></script>
+</body>
+</html>
