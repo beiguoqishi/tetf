@@ -23,7 +23,7 @@
 <![endif]-->
 <div class="template" style="display: none">
     <div id="index_tpl"><div id="index" class="my-page">
-        <ul class="op-list">
+        <ul class="home-op-list">
             <li>
                 <span class="begin">开始游戏</span>
             </li>
@@ -85,12 +85,9 @@
     </div>
     <div id="success_tpl">
         <div class="success-info">
-            <div class="answer">
-                <span class="tip">(4*7)-(1+3) = 24</span>
-            </div>
             <div class="score">
-                <p class="cur-score">50</p>
-                <p class="total-score">当前总分：<em>137</em></p>
+                <p class="cur-score"></p>
+                <p class="total-score">当前总分：<em></em></p>
             </div>
             <div class="next-question">下一题</div>
         </div>
@@ -101,9 +98,20 @@
                 <span class="tip">(4*7)-(1+3) = 24</span>
             </div>
             <div class="game-over"></div>
-            <p class="cur-round-score">本次得分<em>50</em></p>
-            <p class="highest-score">历史最高<em>218</em></p>
+            <p class="cur-round-score">本次得分<em></em></p>
+            <p class="highest-score">历史最高<em></em></p>
             <div class="goon-game">继续挑战</div>
+            <div class="op-list">
+                <span class="go-home"></span><span class="share"></span>
+            </div>
+        </div>
+    </div>
+    <div id="best_score_tpl">
+        <div id="best_score">
+            <div class="show-panel">
+                <p class="score"></p>
+                <p class="barrier-num">过关:<em></em>关</p>
+            </div>
             <div class="op-list">
                 <span class="go-home"></span><span class="share"></span>
             </div>
