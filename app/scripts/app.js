@@ -7,7 +7,8 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         var helpPanelTpl = $('#help_panel_tpl').remove().html();
         var successTpl = $('#success_tpl').remove().html();
         var failureTpl = $('#failure_tpl').remove().html();
-        var barrier = 1;
+        var bestScoreTpl = $('#best_score_tpl').remove().html();
+        var barrier = localStorage.getItem('barrier') || 1;
         var playerPanel;
         var curQuestion;
         var allNums = [], allNumLen = allNums.length;
@@ -21,6 +22,69 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             TWO_ANGLE = 60,
             THREE_ANGLE = 45,
             FOUR_ANGLE = 40;
+        var imgUrl = "";
+        var lineLink = location.href;
+        var shareScore = localStorage.getItem('curRoundScore') || 0;
+        var shareBarrier = (barrier - 1) || 0;
+        var shareTitle = '3824智力小游戏';
+
+        function getDescContent() {
+            return '我刚刚在玩#3824智力小游戏#中闯关&nbsp;' + shareBarrier + '&nbsp;关，得分&bnsp;' + shareScore + '&bnsp;分，小伙伴们赶紧来挑战下吧！';
+        }
+
+        function share() {
+            function shareFriend() {
+                WeixinJSBridge.invoke('sendAppMessage', {
+                    "img_url": imgUrl,
+                    "img_width": "200",
+                    "img_height": "200",
+                    "link": lineLink,
+                    "desc": getDescContent(),
+                    "title": shareTitle
+                }, function (res) {
+                    //_report('send_msg', res.err_msg);
+                })
+            }
+
+            function shareTimeline() {
+                WeixinJSBridge.invoke('shareTimeline', {
+                    "img_url": imgUrl,
+                    "img_width": "200",
+                    "img_height": "200",
+                    "link": lineLink,
+                    "desc": getDescContent(),
+                    "title": shareTitle
+                }, function (res) {
+                    //_report('timeline', res.err_msg);
+                });
+            }
+
+            function shareWeibo() {
+                WeixinJSBridge.invoke('shareWeibo', {
+                    "content": getDescContent(),
+                    "url": lineLink
+                }, function (res) {
+                });
+            }
+
+            // 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。
+            document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+                // 发送给好友
+                WeixinJSBridge.on('menu:share:appmessage', function (argv) {
+                    shareFriend();
+                });
+                // 分享到朋友圈
+                WeixinJSBridge.on('menu:share:timeline', function (argv) {
+                    shareTimeline();
+                });
+                // 分享到微博
+                WeixinJSBridge.on('menu:share:weibo', function (argv) {
+                    shareWeibo();
+                });
+            }, false);
+        }
+
+        share();
 
         function intersection(target) {
             var nodes = $('#question-area .ball');
@@ -48,11 +112,11 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
 
         $('body').on('touchmove', function (e) {
             e.preventDefault();
-        }).on('touchstart', '#index .op-list span', function (e) {
+        }).on('touchstart', '#index .home-op-list span', function (e) {
             $(this).css('opacity', 0.5);
-        }).on('touchend', '#index .op-list span', function (e) {
+        }).on('touchend', '#index .home-op-list span', function (e) {
             $(this).css('opacity', 1);
-        }).on('touchend', '#index .op-list span.begin', function (e) {
+        }).on('touchend', '#index .home-op-list span.begin', function (e) {
             location.hash = 'player';
         }).on('touchend', '#player .to-index', function (e) {
             location.hash = 'index';
@@ -101,7 +165,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             if (interNode = intersection($this)) {
                 $this.addClass('to-intersection');
                 interNode.addClass('covered');
-                $this.data('intersection-below',interNode);
+                $this.data('intersection-below', interNode);
                 var idx = parseInt(interNode.data('idx')),
                     op = ((idx == 1 || idx == 3) ? '+' : '-'),
                     top = (idx == 1 || idx == 2) ? true : false;
@@ -250,7 +314,6 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                     });
 
                     $('.mask').empty().append(combineNode).show();
-//                    setTimeout(function () {
                     $('.cal-result').each(function (idx, el) {
                         el = $(el);
                         var posInfo = el.data('posInfo');
@@ -259,7 +322,6 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                             top: parseInt(el.css('top')) + parseInt(posInfo.top)
                         })
                     });
-//                    }, 0);
                 });
             } else {
                 $this.animate({
@@ -269,7 +331,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                     $this.removeClass('touched');
                 });
             }
-        }).on('touchend','.cal-result',function(e) {
+        }).on('touchend', '.cal-result', function (e) {
             var $this = $(this),
                 posInfo = $this.data('posInfo'),
                 result = posInfo.result,
@@ -282,12 +344,12 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                 .removeClass('to-intersection')
                 .removeClass('covered')
                 .find('.num')
-                .data('num',result)
+                .data('num', result)
                 .text(result);
             if (intersectionBelow) {
-                newNode.data('intersection-below',false);
+                newNode.data('intersection-below', false);
                 intersectionBelow.remove();
-                newNode.attr('data-idx',intersectionBelow.data('idx'));
+                newNode.attr('data-idx', intersectionBelow.data('idx'));
             }
             $('.mask').empty().hide();
             var balls = $('#player .balls .ball');
@@ -295,22 +357,89 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                 var ball1Num = $(balls[0]).find('.num').data('num'),
                     ball2Num = $(balls[1]).find('.num').data('num');
                 var sum = ball1Num + ball2Num;
-                var min = Math.max(ball1Num,ball2Num) - Math.min(ball1Num,ball2Num);
+                var min = Math.max(ball1Num, ball2Num) - Math.min(ball1Num, ball2Num);
                 var mul = ball1Num * ball2Num;
-                var div = Math.max(ball1Num,ball2Num) / Math.min(ball1Num,ball2Num);
+                var div = Math.max(ball1Num, ball2Num) / Math.min(ball1Num, ball2Num);
                 if (sum == 24 || min == 24 || mul == 24 || div == 24) {
-                    $('#player')
-                        .append(successTpl)
-                        .find('#question-area,.btm-op').hide();
+                    var scores = summaryScore();
+                    var playerPanel = $('#player');
+                    if ((playerPanel.find('.success-info').show()).length < 1) {
+                        playerPanel.append(successTpl)
+                    }
+                    var maxBarrier = localStorage.getItem('maxBarrier') || 0;
+                    if (barrier > maxBarrier) {
+                        localStorage.setItem('maxBarrier', barrier);
+                    }
+                    playerPanel
+                        .find('#question-area,.btm-op')
+                        .hide()
+                        .end()
+                        .find('.success-info .cur-score')
+                        .text(scores.curBarrierScore)
+                        .end()
+                        .find('.success-info .total-score em')
+                        .text(scores.curRoundScore);
+                    shareBarrier = barrier;
+                    shareScore = scores.curRoundScore;
                 }
             }
-        }).on('touchend','#player .btm-op .help',function(e) {
+        }).on('touchend', '#player .btm-op .help', function (e) {
             $('.mask').empty().html(helpPanelTpl).show();
-        }).on('touchend','#player .btm-op .restart',function(e) {
-            generateNums($('#player'),curQuestion);
-        }).on('touchend','.i-know',function(e) {
+        }).on('touchend', '#player .btm-op .restart', function (e) {
+            generateNums($('#player'), curQuestion);
+        }).on('touchend', '.i-know', function (e) {
             $('.mask').empty().hide();
+        }).on('touchend', '#player .next-question', function (e) {
+            barrier++;
+            localStorage.setItem('barrier', barrier);
+            updateBarrierTip(barrier);
+            var playerPanel = $('#player');
+            generateNums(playerPanel);
+            playerPanel
+                .find('#question-area,.btm-op')
+                .show()
+                .end()
+                .find('.success-info,.failure-info')
+                .hide();
+            resetInterval();
+        }).on('touchend', '#player .goon-game', function (e) {
+            barrier = 1;
+            localStorage.setItem('barrier', barrier);
+            updateBarrierTip(barrier);
+            localStorage.setItem('curRoundScore', 0);
+            var playerPanel = $('#player');
+            generateNums(playerPanel);
+            playerPanel
+                .find('#question-area,.btm-op')
+                .show()
+                .end()
+                .find('.success-info,.failure-info')
+                .hide();
+            resetInterval();
+        }).on('touchend', '#index .my-score', function (e) {
+            shareBarrier = localStorage.getItem('maxBarrier');
+            shareScore = localStorage.getItem('historyHighestScore');
+            location.hash = 'best_score';
         });
+
+        function updateBarrierTip(barrier) {
+            $('#player .barrier-num').text(barrier);
+        }
+
+        function summaryScore() {
+            clearInterval(timeTickInterval);
+            var curBarrierScore = parseInt($('.time-tip').data('remainderTime'));
+            localStorage.setItem('curBarrierScore', curBarrierScore);
+            var curRoundScore = (parseInt(localStorage.getItem('curRoundScore')) || 0) + curBarrierScore;
+            localStorage.setItem('curRoundScore', curRoundScore);
+            var historyHighestScore = (parseInt(localStorage.getItem('historyHighestScore')) || 0);
+            localStorage.setItem('historyHighestScore', Math.max(historyHighestScore, curRoundScore));
+            return {
+                curBarrierScore: curBarrierScore,
+                curRoundScore: curRoundScore,
+                historyHighestScore: historyHighestScore
+            }
+        }
 
         var timeTickInterval,
             timeTick = function () {
@@ -329,9 +458,33 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
 
                 $('.remainder-time').text('00:' + (remainderTime < 10 ? '0' + remainderTime : remainderTime));
                 if (remainderTime <= 0) {
-                    clearInterval(timeTickInterval);
+                    var scores = summaryScore();
+                    var playerPanel = $('#player');
+                    var failureInfo = playerPanel.find('.failure-info');
+                    if (failureInfo.length < 1) {
+                        failureInfo = $(failureTpl).appendTo(playerPanel);
+                    }
+
+                    playerPanel.find('#question-area,.btm-op')
+                        .hide();
+                    failureInfo
+                        .find('.answer .tip')
+                        .text(curQuestion.result || '')
+                        .end()
+                        .find('.cur-round-score em')
+                        .text(scores.curBarrierScore)
+                        .end()
+                        .find('.highest-score em')
+                        .text(scores.historyHighestScore);
                 }
             };
+
+        function resetInterval() {
+            clearInterval(timeTickInterval);
+            $('.time-tip').data('remainderTime', TOTAL_TIME_IN_SECONDS);
+            $('.remainder-time').text('00:60');
+            timeTickInterval = setInterval(timeTick, 1000);
+        }
 
         function createQuestion() {
             if (!playerPanel) {
@@ -340,7 +493,8 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             generateNums(playerPanel);
             return playerPanel;
         }
-        function generateNums(playerPanel,wantedQuestion) {
+
+        function generateNums(playerPanel, wantedQuestion) {
             if (allNums.length === 0) {
                 allNums = calculate_num.all_nums_group();
                 allNumLen = allNums.length;
@@ -361,14 +515,21 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             routes: {
                 '': 'index',
                 'index': 'index',
-                'player': 'player'
+                'player': 'player',
+                'best_score': 'bestScore'
             },
             index: function () {
                 pageslider.slidePage($(indexTpl));
             },
             player: function () {
                 pageslider.slidePage(createQuestion());
-                timeTickInterval = setInterval(timeTick, 1000);
+                resetInterval();
+            },
+            bestScore: function () {
+                var bestScore = $(bestScoreTpl),
+                    score = localStorage.getItem('historyHighestScore'),
+                    maxBarrier = localStorage.getItem('maxBarrier');
+                bestScore.find('.score').text(score).end().find('.barrier-num em').text(maxBarrier);
             }
         });
         var route = new AppRoute();
