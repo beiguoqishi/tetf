@@ -8,7 +8,8 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         var successTpl = $('#success_tpl').remove().html();
         var failureTpl = $('#failure_tpl').remove().html();
         var bestScoreTpl = $('#best_score_tpl').remove().html();
-        var barrier = localStorage.getItem('barrier') || 1;
+        var shareTipTpl = $('#share_tip_tpl').remove().html();
+        var barrier = (localStorage.getItem('barrier') || 0) + 1;
         var playerPanel;
         var curQuestion;
         var allNums = [], allNumLen = allNums.length;
@@ -25,11 +26,11 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         var imgUrl = "";
         var lineLink = location.href;
         var shareScore = localStorage.getItem('curRoundScore') || 0;
-        var shareBarrier = (barrier - 1) || 0;
+        var shareBarrier = localStorage.getItem('barrier') || 0;
         var shareTitle = '3824智力小游戏';
 
         function getDescContent() {
-            return '我刚刚在玩#3824智力小游戏#中闯关&nbsp;' + shareBarrier + '&nbsp;关，得分&bnsp;' + shareScore + '&bnsp;分，小伙伴们赶紧来挑战下吧！';
+            return '我刚刚在玩#3824智力小游戏#中闯关 ' + shareBarrier + ' 关，得分 ' + shareScore + ' 分，小伙伴们赶紧来挑战下吧！';
         }
 
         function share() {
@@ -53,7 +54,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                     "img_height": "200",
                     "link": lineLink,
                     "desc": getDescContent(),
-                    "title": shareTitle
+                    "title": getDescContent()
                 }, function (res) {
                     //_report('timeline', res.err_msg);
                 });
@@ -67,24 +68,22 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                 });
             }
 
-            // 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。
-            document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
-                // 发送给好友
-                WeixinJSBridge.on('menu:share:appmessage', function (argv) {
-                    shareFriend();
-                });
-                // 分享到朋友圈
-                WeixinJSBridge.on('menu:share:timeline', function (argv) {
-                    shareTimeline();
-                });
-                // 分享到微博
-                WeixinJSBridge.on('menu:share:weibo', function (argv) {
-                    shareWeibo();
-                });
-            }, false);
+            // 发送给好友
+            WeixinJSBridge.on('menu:share:appmessage', function (argv) {
+                shareFriend();
+            });
+            // 分享到朋友圈
+            WeixinJSBridge.on('menu:share:timeline', function (argv) {
+                shareTimeline();
+            });
+            // 分享到微博
+            WeixinJSBridge.on('menu:share:weibo', function (argv) {
+                shareWeibo();
+            });
         }
-
-        share();
+        if (typeof WeixinJSBridge != 'undefined') {
+            share();
+        }
 
         function intersection(target) {
             var nodes = $('#question-area .ball');
@@ -361,6 +360,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                 var mul = ball1Num * ball2Num;
                 var div = Math.max(ball1Num, ball2Num) / Math.min(ball1Num, ball2Num);
                 if (sum == 24 || min == 24 || mul == 24 || div == 24) {
+                    localStorage.setItem('barrier', barrier);
                     var scores = summaryScore();
                     var playerPanel = $('#player');
                     if ((playerPanel.find('.success-info').show()).length < 1) {
@@ -391,7 +391,6 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             $('.mask').empty().hide();
         }).on('touchend', '#player .next-question', function (e) {
             barrier++;
-            localStorage.setItem('barrier', barrier);
             updateBarrierTip(barrier);
             var playerPanel = $('#player');
             generateNums(playerPanel);
@@ -420,6 +419,20 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             shareBarrier = localStorage.getItem('maxBarrier');
             shareScore = localStorage.getItem('historyHighestScore');
             location.hash = 'best_score';
+        }).on('touchstart','.op-list .go-home,.op-list .share',function(e) {
+            var $this = $(this);
+            $this.css('opacity',0.5);
+        }).on('touchend','.op-list .go-home',function(e) {
+            var $this = $(this);
+            $this.css('opacity',1);
+            location.hash = '';
+        }).on('touchend','.op-list .share',function(e) {
+            var $this = $(this);
+            $this.css('opacity',1);
+            $('.mask').css('background-color','rgba(50,50,50,0.9)').empty().append(shareTipTpl).show();
+            setTimeout(function(){
+                $('.mask').css('background-color','').hide();
+            },3000);
         });
 
         function updateBarrierTip(barrier) {
@@ -460,7 +473,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                 if (remainderTime <= 0) {
                     var scores = summaryScore();
                     var playerPanel = $('#player');
-                    var failureInfo = playerPanel.find('.failure-info');
+                    var failureInfo = playerPanel.find('.failure-info').show();
                     if (failureInfo.length < 1) {
                         failureInfo = $(failureTpl).appendTo(playerPanel);
                     }
@@ -530,6 +543,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                     score = localStorage.getItem('historyHighestScore'),
                     maxBarrier = localStorage.getItem('maxBarrier');
                 bestScore.find('.score').text(score).end().find('.barrier-num em').text(maxBarrier);
+                pageslider.slidePage(bestScore);
             }
         });
         var route = new AppRoute();
