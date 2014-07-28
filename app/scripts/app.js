@@ -540,8 +540,8 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             },
             bestScore: function () {
                 var bestScore = $(bestScoreTpl),
-                    score = localStorage.getItem('historyHighestScore'),
-                    maxBarrier = localStorage.getItem('maxBarrier');
+                    score = localStorage.getItem('historyHighestScore') || 0,
+                    maxBarrier = localStorage.getItem('maxBarrier') || 0;
                 bestScore.find('.score').text(score).end().find('.barrier-num em').text(maxBarrier);
                 pageslider.slidePage(bestScore);
             }
