@@ -401,9 +401,6 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                 .hide();
             resetInterval();
         }).on('touchend', '#player .goon-game', function (e) {
-            barrier = 1;
-            localStorage.setItem('barrier', barrier);
-            localStorage.setItem('curRoundScore', 0);
             var playerPanel = $('#player');
             generateNums(playerPanel);
             playerPanel
@@ -487,6 +484,10 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                         .end()
                         .find('.highest-score em')
                         .text(scores.historyHighestScore);
+
+                    barrier = 0;
+                    localStorage.setItem('barrier', barrier);
+                    localStorage.setItem('curRoundScore', 0);
                 }
             };
 
@@ -501,6 +502,12 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             if (!playerPanel) {
                 playerPanel = $(playerTpl);
             }
+            playerPanel
+                .find('#question-area,.btm-op')
+                .show()
+                .end()
+                .find('.success-info,.failure-info')
+                .hide();
             generateNums(playerPanel);
             return playerPanel;
         }
@@ -535,6 +542,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             },
             player: function () {
                 pageslider.slidePage(createQuestion());
+                barrier = parseInt(localStorage.getItem('barrier') || 0) + 1;
                 updateBarrierTip(barrier);
                 resetInterval();
             },
