@@ -9,7 +9,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         var failureTpl = $('#failure_tpl').remove().html();
         var bestScoreTpl = $('#best_score_tpl').remove().html();
         var shareTipTpl = $('#share_tip_tpl').remove().html();
-        var barrier = (localStorage.getItem('barrier') || 0) + 1;
+        var barrier = parseInt(localStorage.getItem('barrier') || 0) + 1;
         var playerPanel;
         var curQuestion;
         var allNums = [], allNumLen = allNums.length;
@@ -19,7 +19,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             BARRIER_RIGHT = 130,
             BARRIER_BOTTOM = 130,
             BARRIER_TOP = -50,
-            CALRESULTGO = 100,
+            CALRESULTGO = 120,
             TWO_ANGLE = 60,
             THREE_ANGLE = 45,
             FOUR_ANGLE = 40;
@@ -391,7 +391,6 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             $('.mask').empty().hide();
         }).on('touchend', '#player .next-question', function (e) {
             barrier++;
-            updateBarrierTip(barrier);
             var playerPanel = $('#player');
             generateNums(playerPanel);
             playerPanel
@@ -404,7 +403,6 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         }).on('touchend', '#player .goon-game', function (e) {
             barrier = 1;
             localStorage.setItem('barrier', barrier);
-            updateBarrierTip(barrier);
             localStorage.setItem('curRoundScore', 0);
             var playerPanel = $('#player');
             generateNums(playerPanel);
@@ -485,7 +483,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                         .text(curQuestion.result || '')
                         .end()
                         .find('.cur-round-score em')
-                        .text(scores.curBarrierScore)
+                        .text(scores.curRoundScore)
                         .end()
                         .find('.highest-score em')
                         .text(scores.historyHighestScore);
@@ -512,6 +510,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                 allNums = calculate_num.all_nums_group();
                 allNumLen = allNums.length;
             }
+            updateBarrierTip(barrier);
             var idx = parseInt(Math.random() * allNumLen),
                 question = wantedQuestion || allNums[idx],
                 nums = question.num;
@@ -536,6 +535,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             },
             player: function () {
                 pageslider.slidePage(createQuestion());
+                updateBarrierTip(barrier);
                 resetInterval();
             },
             bestScore: function () {
