@@ -394,7 +394,9 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         }).on('touchend', '.i-know', function (e) {
             $('.mask').empty().hide();
         }).on('touchend', '#player .next-question', function (e) {
+            alert(barrier);
             barrier++;
+            alert(barrier);
             var playerPanel = $('#player');
             generateNums(playerPanel);
             playerPanel
