@@ -9,7 +9,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         var failureTpl = $('#failure_tpl').remove().html();
         var bestScoreTpl = $('#best_score_tpl').remove().html();
         var shareTipTpl = $('#share_tip_tpl').remove().html();
-        var barrier = parseInt(localStorage.getItem('barrier') || 0) + 1;
+        var barrier = 1;
         var playerPanel;
         var curQuestion;
         var allNums = [], allNumLen = allNums.length;
@@ -22,12 +22,16 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             CALRESULTGO = 120,
             TWO_ANGLE = 60,
             THREE_ANGLE = 45,
-            FOUR_ANGLE = 40;
-        var imgUrl = "";
+            FOUR_ANGLE = 40,
+            SHARE_IMG_WIDTH = 250,
+            SHARE_IMG_HEIGHT = 180;
+        var imgUrl = 'http://img.bzhwj.com/'+ "/images/3824/indexlogo.png";
         var lineLink = location.href;
-        var shareScore = localStorage.getItem('curRoundScore') || 0;
-        var shareBarrier = localStorage.getItem('barrier') || 0;
+        var shareScore = localStorage.getItem('historyHighestScore') || 0;
+        var shareBarrier = localStorage.getItem('maxBarrier') || 0;
         var shareTitle = '3824智力小游戏';
+        localStorage.setItem('curRoundScore',0);
+        localStorage.setItem('barrier',0);
 
         function getDescContent() {
             return '我刚刚在玩#3824智力小游戏#中闯关 ' + shareBarrier + ' 关，得分 ' + shareScore + ' 分，小伙伴们赶紧来挑战下吧！';
@@ -37,8 +41,8 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             function shareFriend() {
                 WeixinJSBridge.invoke('sendAppMessage', {
                     "img_url": imgUrl,
-                    "img_width": "200",
-                    "img_height": "200",
+                    "img_width": SHARE_IMG_WIDTH,
+                    "img_height": SHARE_IMG_HEIGHT,
                     "link": lineLink,
                     "desc": getDescContent(),
                     "title": shareTitle
@@ -50,8 +54,8 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             function shareTimeline() {
                 WeixinJSBridge.invoke('shareTimeline', {
                     "img_url": imgUrl,
-                    "img_width": "200",
-                    "img_height": "200",
+                    "img_width": SHARE_IMG_WIDTH,
+                    "img_height": SHARE_IMG_HEIGHT,
                     "link": lineLink,
                     "desc": getDescContent(),
                     "title": getDescContent()
@@ -371,7 +375,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                         localStorage.setItem('maxBarrier', barrier);
                     }
                     playerPanel
-                        .find('#question-area,.btm-op')
+                        .find('#question-area,.btm-op,.failure-info')
                         .hide()
                         .end()
                         .find('.success-info .cur-score')
@@ -473,7 +477,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                         failureInfo = $(failureTpl).appendTo(playerPanel);
                     }
 
-                    playerPanel.find('#question-area,.btm-op')
+                    playerPanel.find('#question-area,.btm-op,.success-info')
                         .hide();
                     failureInfo
                         .find('.answer .tip')
@@ -485,7 +489,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                         .find('.highest-score em')
                         .text(scores.historyHighestScore);
 
-                    barrier = 0;
+                    barrier = 1;
                     localStorage.setItem('barrier', barrier);
                     localStorage.setItem('curRoundScore', 0);
                 }
@@ -542,7 +546,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             },
             player: function () {
                 pageslider.slidePage(createQuestion());
-                barrier = parseInt(localStorage.getItem('barrier') || 0) + 1;
+//                barrier = parseInt(localStorage.getItem('barrier') || 0) + 1;
                 updateBarrierTip(barrier);
                 resetInterval();
             },
