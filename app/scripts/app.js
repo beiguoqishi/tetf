@@ -30,11 +30,11 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         var shareScore = localStorage.getItem('historyHighestScore') || 0;
         var shareBarrier = localStorage.getItem('maxBarrier') || 0;
         var shareTitle = '3824智力小游戏';
-        localStorage.setItem('curRoundScore',0);
-        localStorage.setItem('barrier',0);
+        localStorage.setItem('curRoundScore', 0);
+        localStorage.setItem('barrier', 0);
 
         function getDescContent() {
-            return '我拿了 '+shareScore+' 分，我在第 '+shareBarrier+' 关等着你，邻居家的孩子！';
+            return '我拿了 ' + shareScore + ' 分，我在第 ' + shareBarrier + ' 关等着你，邻居家的孩子！';
 //            return '邻居家的孩子，还记得大明湖畔玩过的24点纸牌游戏吗？我已经到第 '+shareBarrier+' 关，得了 '+shareScore+' 分，敢来应战么？';
         }
 
@@ -73,24 +73,34 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                 });
             }
 
-            // 发送给好友
-            WeixinJSBridge.on('menu:share:appmessage', function (argv) {
-                shareFriend();
-            });
-            // 分享到朋友圈
-            WeixinJSBridge.on('menu:share:timeline', function (argv) {
-                shareTimeline();
-            });
-            // 分享到微博
-            WeixinJSBridge.on('menu:share:weibo', function (argv) {
-                shareWeibo();
-            });
-        }
-        setTimeout(function(){
-            if (typeof WeixinJSBridge != 'undefined') {
-                share();
+            function sendMessage() {
+                // 发送给好友
+                WeixinJSBridge.on('menu:share:appmessage', function (argv) {
+                    shareFriend();
+                });
+                // 分享到朋友圈
+                WeixinJSBridge.on('menu:share:timeline', function (argv) {
+                    shareTimeline();
+                });
+                // 分享到微博
+                WeixinJSBridge.on('menu:share:weibo', function (argv) {
+                    shareWeibo();
+                });
             }
-        },2000);
+
+            if (document.addEventListener) {
+                document.addEventListener('WeixinJSBridgeReady',sendMessage , false);
+            } else if (document.attachEvent) {
+                document.attachEvent('WeixinJSBridgeReady', sendMessage);
+                document.attachEvent('onWeixinJSBridgeReady', sendMessage);
+            }
+        }
+
+//        setTimeout(function () {
+//            if (typeof WeixinJSBridge != 'undefined') {
+                share();
+//            }
+//        }, 2000);
 
         function intersection(target) {
             var nodes = $('#question-area .ball');
@@ -421,20 +431,20 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             shareBarrier = localStorage.getItem('maxBarrier');
             shareScore = localStorage.getItem('historyHighestScore');
             location.hash = 'best_score';
-        }).on('touchstart','.op-list .go-home,.op-list .share',function(e) {
+        }).on('touchstart', '.op-list .go-home,.op-list .share', function (e) {
             var $this = $(this);
-            $this.css('opacity',0.5);
-        }).on('touchend','.op-list .go-home',function(e) {
+            $this.css('opacity', 0.5);
+        }).on('touchend', '.op-list .go-home', function (e) {
             var $this = $(this);
-            $this.css('opacity',1);
+            $this.css('opacity', 1);
             location.hash = '';
-        }).on('touchend','.op-list .share',function(e) {
+        }).on('touchend', '.op-list .share', function (e) {
             var $this = $(this);
-            $this.css('opacity',1);
-            $('.mask').css('background-color','rgba(50,50,50,0.9)').empty().append(shareTipTpl).show();
-            setTimeout(function(){
-                $('.mask').css('background-color','').hide();
-            },3000);
+            $this.css('opacity', 1);
+            $('.mask').css('background-color', 'rgba(50,50,50,0.9)').empty().append(shareTipTpl).show();
+            setTimeout(function () {
+                $('.mask').css('background-color', '').hide();
+            }, 3000);
         });
 
         function updateBarrierTip(barrier) {
