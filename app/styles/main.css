@@ -447,7 +447,7 @@ ul.home-op-list li span.my-score {
     background: url("../images/gameover.png") top center no-repeat;
     background-size: contain;
     height: 50px;
-    margin-top: 70px;
+    margin-top: 20px;
 }
 
 .failure-info .cur-round-score {
@@ -474,7 +474,7 @@ ul.home-op-list li span.my-score {
 .failure-info .goon-game {
     height: 50px;
     line-height: 50px;
-    margin: 50px auto 0;
+    margin: 30px auto 0;
     width: 131px;
     background: url("../images/btnbg1.png") top center no-repeat;
     background-size: cover;
