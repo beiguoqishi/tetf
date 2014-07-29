@@ -49,13 +49,13 @@ body, .wrapper, #index {
 }
 
 #index {
-    background: url("../images/indexlogo.png") top center no-repeat;
+    background: url("../images/indexlogo.png") center 60px no-repeat;
     -webkit-background-size: 100% auto;
     background-size: 100% auto;
 }
 
 ul.home-op-list {
-    margin-top: 200px;
+    margin-top: 240px;
 }
 
 ul.home-op-list li {
