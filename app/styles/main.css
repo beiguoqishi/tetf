@@ -327,7 +327,7 @@ ul.home-op-list li span.my-score {
     height: 50px;
     background-size: cover;
     background-repeat: no-repeat;
-    margin: 0 15px;
+    margin: 0;
 }
 
 #player .btm-op span.help {
