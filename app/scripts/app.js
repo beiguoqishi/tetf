@@ -89,7 +89,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             if (typeof WeixinJSBridge != 'undefined') {
                 share();
             }
-        },1000);
+        },2000);
 
         function intersection(target) {
             var nodes = $('#question-area .ball');
@@ -539,9 +539,9 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         var AppRoute = Backbone.Router.extend({
             routes: {
                 '': 'index',
-                'index': 'index',
-                'player': 'player',
-                'best_score': 'bestScore'
+                'index*': 'index',
+                'player*': 'player',
+                'best_score*': 'bestScore'
             },
             index: function () {
                 pageslider.slidePage($(indexTpl));
