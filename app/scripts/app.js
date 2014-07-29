@@ -34,7 +34,8 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         localStorage.setItem('barrier',0);
 
         function getDescContent() {
-            return '邻居家的孩子，还记得大明湖畔玩过的24点纸牌游戏吗？我已经到第 '+shareBarrier+' 关，得了 '+shareScore+' 分，敢来应战么？';
+            return '我拿了 '+shareScore+' 分，我在第 '+shareBarrier+' 关等着你，邻居家的孩子！';
+//            return '邻居家的孩子，还记得大明湖畔玩过的24点纸牌游戏吗？我已经到第 '+shareBarrier+' 关，得了 '+shareScore+' 分，敢来应战么？';
         }
 
         function share() {
