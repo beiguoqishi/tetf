@@ -571,4 +571,5 @@ ul.home-op-list li span.my-score {
 
 iframe {
     max-width: 100%!important;
+    position: absolute;
 }
