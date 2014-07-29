@@ -93,7 +93,7 @@ ul.home-op-list li span.my-score {
 }
 
 #player .p-hd .nav {
-    padding: 15px 0;
+    padding: 3px 0;
     overflow: hidden;
 }
 
@@ -140,7 +140,7 @@ ul.home-op-list li span.my-score {
 #question-area {
     width: 180px;
     height: 180px;
-    margin: 50px auto 0;
+    margin: 45px auto 0;
     position: relative;
 }
 
@@ -543,7 +543,7 @@ ul.home-op-list li span.my-score {
 
 #best_score .op-list {
     position: absolute;
-    bottom: 30px;
+    bottom: 20px;
     left: 50%;
     margin-left: -80px;
 }
@@ -566,7 +566,7 @@ ul.home-op-list li span.my-score {
 }
 
 #best_score ul.home-op-list {
-    margin-top: 420px;
+    margin-top: 400px;
 }
 
 iframe {
