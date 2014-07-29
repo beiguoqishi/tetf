@@ -25,7 +25,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
             FOUR_ANGLE = 40,
             SHARE_IMG_WIDTH = 250,
             SHARE_IMG_HEIGHT = 180;
-        var imgUrl = 'http://img.bzhwj.com/images/3824/indexlogo.png';
+        var imgUrl = 'http://img.bzhwj.com/images/3824/new_indexlogo.png';
         var lineLink = location.href;
         var shareScore = localStorage.getItem('historyHighestScore') || 0;
         var shareBarrier = localStorage.getItem('maxBarrier') || 0;
@@ -85,9 +85,11 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
                 shareWeibo();
             });
         }
-        if (typeof WeixinJSBridge != 'undefined') {
-            share();
-        }
+        setTimeout(function(){
+            if (typeof WeixinJSBridge != 'undefined') {
+                share();
+            }
+        },1000);
 
         function intersection(target) {
             var nodes = $('#question-area .ball');
