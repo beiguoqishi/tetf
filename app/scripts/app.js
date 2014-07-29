@@ -34,7 +34,7 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
         localStorage.setItem('barrier',0);
 
         function getDescContent() {
-            return '我刚刚在玩#3824智力小游戏#中闯关 ' + shareBarrier + ' 关，得分 ' + shareScore + ' 分，小伙伴们赶紧来挑战下吧！';
+            return '邻居家的孩子，还记得大明湖畔玩过的24点纸牌游戏吗？我已经到第 '+shareBarrier+' 关，得了 '+shareScore+' 分，敢来应战么？';
         }
 
         function share() {
