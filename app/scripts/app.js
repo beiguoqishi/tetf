@@ -115,11 +115,11 @@ define('app', ['jquery', 'backbone', 'pageslider', 'calculate_num'], function ($
 
         $('body').on('touchmove', function (e) {
             e.preventDefault();
-        }).on('touchstart', '#index .home-op-list span', function (e) {
+        }).on('touchstart', '.home-op-list span', function (e) {
             $(this).css('opacity', 0.5);
-        }).on('touchend', '#index .home-op-list span', function (e) {
+        }).on('touchend', '.home-op-list span', function (e) {
             $(this).css('opacity', 1);
-        }).on('touchend', '#index .home-op-list span.begin', function (e) {
+        }).on('touchend', '.home-op-list span.begin', function (e) {
             location.hash = 'player';
         }).on('touchend', '#player .to-index', function (e) {
             location.hash = 'index';
